@@ -1,0 +1,67 @@
+{
+  "name": "presend-api",
+  "version": "1.3.0",
+  "description": "Zero-dependency JS client for the free Presend API — hashing, UUID, Base64, JWT decode, URL cleaning, IP geo, timestamps, colors, user-agent parsing, password generation/breach check, email validation, favicon fetch, CSV/JSON conversion, security headers, plus 5 chained endpoints (combined email/password/phone verification, PDF merge+compress, image EXIF clean).",
+  "main": "index.js",
+  "module": "index.mjs",
+  "type": "commonjs",
+  "exports": {
+    "require": "./index.js",
+    "import": "./index.mjs"
+  },
+  "files": [
+    "index.js",
+    "index.mjs",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "api",
+    "base64",
+    "certificate-transparency",
+    "color-converter",
+    "csv",
+    "csv-to-json",
+    "cybersecurity",
+    "disposable-email",
+    "email-validation",
+    "favicon",
+    "free-api",
+    "hash",
+    "have-i-been-pwned",
+    "ip-geolocation",
+    "jwt",
+    "no-auth",
+    "password-breach",
+    "password-generator",
+    "security-headers",
+    "sha256",
+    "subdomains",
+    "timestamp",
+    "url-cleaner",
+    "url-reputation",
+    "user-agent-parser",
+    "utm",
+    "uuid",
+    "phone-validation",
+    "libphonenumber",
+    "pdf-merge",
+    "exif-remover",
+    "chained-api"
+  ],
+  "author": "Presend",
+  "license": "MIT",
+  "homepage": "https://presend.pages.dev/api",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/presendapp/presend-api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/presendapp/presend-api/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
