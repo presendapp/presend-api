@@ -204,6 +204,90 @@ async function phoneVerify(number, country) {
   return request('/phone-verify?' + params.toString());
 }
 
+// --- Added for the 9 new chained endpoints (v1.4.0) ---
+
+// Combines security-headers + url-reputation + subdomains into one report.
+async function securityScan(url) {
+  return request('/security-scan?url=' + encodeURIComponent(url));
+}
+
+// Checks SPF strength, DMARC policy, and a best-effort DKIM lookup.
+async function emailSecurity(domain) {
+  return request('/email-security?domain=' + encodeURIComponent(domain));
+}
+
+// files: array of Buffer, or array of { name, buffer }. 1 file returns a
+// hash; 2 files return a direct similarity comparison. JPEG/PNG only.
+async function imageSimilarity(files) {
+  const formData = new FormData();
+  files.forEach((f, i) => {
+    if (Buffer.isBuffer(f)) {
+      formData.append('files', new Blob([f]), `file${i}`);
+    } else {
+      formData.append('files', new Blob([f.buffer]), f.name || `file${i}`);
+    }
+  });
+  return request('/image-similarity', { method: 'POST', body: formData });
+}
+
+// file: Buffer or { name, buffer }. Decodes a QR code and, if it's a URL,
+// checks it against URLhaus for phishing/malware indicators.
+async function qrScan(file) {
+  const formData = new FormData();
+  if (Buffer.isBuffer(file)) {
+    formData.append('file', new Blob([file]), 'qrcode.png');
+  } else {
+    formData.append('file', new Blob([file.buffer]), file.name || 'qrcode.png');
+  }
+  return request('/qr-scan', { method: 'POST', body: formData });
+}
+
+// buffer: raw file bytes. Detects the real type from binary signature and
+// flags a mismatch against contentType (the "claimed" type).
+async function fileType(buffer, contentType = 'application/octet-stream') {
+  return request('/file-type', {
+    method: 'POST',
+    headers: { 'Content-Type': contentType },
+    body: buffer,
+  });
+}
+
+// opts: { secret } for HS256/384/512, or { jwk } / { jwksUrl } for
+// RS/PS/ES algorithms. Actually verifies the cryptographic signature.
+async function jwtVerify(token, opts = {}) {
+  const body = { token };
+  if (opts.secret) body.secret = opts.secret;
+  if (opts.jwk) body.jwk = opts.jwk;
+  if (opts.jwksUrl) body.jwks_url = opts.jwksUrl;
+  return request('/jwt-verify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+}
+
+// buffer: raw file bytes. Hashes (SHA-256) and checks against
+// MalwareBazaar (abuse.ch). "Not found" does not guarantee safety.
+async function malwareCheck(buffer) {
+  return request('/malware-check', { method: 'POST', body: buffer });
+}
+
+// texts: array of 1 or 2 strings. SimHash-based near-duplicate detection
+// -- unrelated texts typically score ~50% by chance, not 0%.
+async function textSimilarity(texts) {
+  return request('/text-similarity', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ texts }),
+  });
+}
+
+// Fetches robots.txt and reports which known AI crawlers (GPTBot,
+// ClaudeBot, PerplexityBot, etc.) are allowed or blocked.
+async function aiCrawlerCheck(domain) {
+  return request('/ai-crawler-check?domain=' + encodeURIComponent(domain));
+}
+
 module.exports = {
   hashFile,
   cleanUrl,
@@ -231,4 +315,13 @@ module.exports = {
   emailVerify,
   passwordCheck,
   phoneVerify,
+  securityScan,
+  emailSecurity,
+  imageSimilarity,
+  qrScan,
+  fileType,
+  jwtVerify,
+  malwareCheck,
+  textSimilarity,
+  aiCrawlerCheck,
 };

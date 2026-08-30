@@ -124,6 +124,15 @@ All methods return a Promise resolving to the parsed JSON response, and throw an
 | `phoneVerify(number, country?)` | Validate/format a phone number; auto-detects country from IP if omitted |
 | `cleanImage(buffer, contentType?)` | Strip EXIF/GPS (JPEG) or text metadata (PNG) — returns `{ buffer, headers }`, no quality loss |
 | `mergeAndCompressPdf(files[])` | Merge 2+ PDFs and compress the result — returns `{ buffer, headers }`; `files` is an array of `Buffer` |
+| `securityScan(url)` | Combined: security-headers + url-reputation + subdomains, one report with an overall score |
+| `emailSecurity(domain)` | SPF strength, DMARC policy, and a best-effort DKIM lookup against common selectors |
+| `imageSimilarity(files[])` | Perceptual hash (dHash) for 1-2 JPEG/PNG images; 2 files return a direct similarity score |
+| `qrScan(file)` | Decode a QR code and, if it's a URL, check it against a malware/phishing database |
+| `fileType(buffer, contentType?)` | Detect a file's real type from its binary signature; flags a mismatch against the claimed type |
+| `jwtVerify(token, { secret? \| jwk? \| jwksUrl? })` | Actually verify a JWT's cryptographic signature (HS/RS/PS/ES) — unlike `decodeJwt`, which only decodes |
+| `malwareCheck(buffer)` | Hash a file (SHA-256) and check it against a known-malware database |
+| `textSimilarity(texts[])` | SimHash near-duplicate detection for 1-2 texts; unrelated texts score ~50% by chance, not 0% |
+| `aiCrawlerCheck(domain)` | Fetch robots.txt and report which known AI crawlers (GPTBot, ClaudeBot, etc.) are allowed/blocked |
 
 ## Rate limits
 

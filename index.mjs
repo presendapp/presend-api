@@ -28,6 +28,15 @@ export const {
   emailVerify,
   passwordCheck,
   phoneVerify,
+  securityScan,
+  emailSecurity,
+  imageSimilarity,
+  qrScan,
+  fileType,
+  jwtVerify,
+  malwareCheck,
+  textSimilarity,
+  aiCrawlerCheck,
 } = cjs;
 
 export default cjs;

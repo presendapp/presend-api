@@ -144,6 +144,61 @@ async function main() {
     }
   });
 
+  // --- 9 new chained endpoints (v1.4.0) ---
+  await check('securityScan combines headers + reputation + attack_surface', async () => {
+    const r = await presend.securityScan('https://github.com');
+    if (typeof r.overall_score !== 'number' || !r.security_headers) {
+      throw new Error('Got: ' + JSON.stringify(r).slice(0, 200));
+    }
+  });
+  await check('emailSecurity parses SPF/DMARC for google.com', async () => {
+    const r = await presend.emailSecurity('google.com');
+    if (r.spf.configured !== true || r.dmarc.enforced !== true) {
+      throw new Error('Got: ' + JSON.stringify(r));
+    }
+  });
+  await check('imageSimilarity scores a recompressed image as near-identical', async () => {
+    const fs = require('fs');
+    const a = fs.readFileSync('/tmp/test-fixtures/similar_a.png');
+    const a2 = fs.readFileSync('/tmp/test-fixtures/similar_a2.jpg');
+    const r = await presend.imageSimilarity([a, a2]);
+    if (r.similarity_percent < 95) throw new Error('Got similarity: ' + r.similarity_percent);
+  });
+  await check('qrScan decodes a URL and flags is_url', async () => {
+    const fs = require('fs');
+    const buf = fs.readFileSync('/tmp/test-fixtures/qr_url.png');
+    const r = await presend.qrScan(buf);
+    if (r.found !== true || r.is_url !== true) throw new Error('Got: ' + JSON.stringify(r));
+  });
+  await check('fileType detects a mislabeled file', async () => {
+    const fs = require('fs');
+    const buf = fs.readFileSync('/tmp/test-fixtures/photo.png');
+    const r = await presend.fileType(buf, 'image/jpeg');
+    if (r.detected.mime !== 'image/png' || r.mismatch !== true) throw new Error('Got: ' + JSON.stringify(r));
+  });
+  await check('jwtVerify validates an HMAC-signed token', async () => {
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlRlc3QgVXNlciIsImV4cCI6OTk5OTk5OTk5OX0.1yfGmVGJPGCw0Y4cxJg2kb8qBfeHst1CnxNFAeMVG_E';
+    const r = await presend.jwtVerify(token, { secret: 'mon-secret-de-test-tres-solide' });
+    if (r.valid !== true) throw new Error('Got: ' + JSON.stringify(r));
+  });
+  await check('malwareCheck computes SHA-256 and returns a structured result', async () => {
+    const fs = require('fs');
+    const buf = fs.readFileSync('/tmp/test-fixtures/doc1.pdf');
+    const r = await presend.malwareCheck(buf);
+    if (!r.sha256 || !('checked' in r.malwarebazaar)) throw new Error('Got: ' + JSON.stringify(r));
+  });
+  await check('textSimilarity scores identical text as 100%', async () => {
+    const t = 'This is exactly the same sentence repeated for a sanity check.';
+    const r = await presend.textSimilarity([t, t]);
+    if (r.similarity_percent !== 100) throw new Error('Got: ' + r.similarity_percent);
+  });
+  await check('aiCrawlerCheck returns a per-bot report', async () => {
+    const r = await presend.aiCrawlerCheck('github.com');
+    if (r.robots_txt_found !== true || !Array.isArray(r.bots) || r.bots.length === 0) {
+      throw new Error('Got: ' + JSON.stringify(r).slice(0, 200));
+    }
+  });
+
   console.log(`\n${passed} passed, ${failed} failed`);
   if (failed > 0) process.exit(1);
 }
