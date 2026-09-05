@@ -1,6 +1,6 @@
 {
   "name": "presend-api",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Zero-dependency JS client for the free Presend API — hashing, UUID, Base64, JWT decode, URL cleaning, IP geo, timestamps, colors, user-agent parsing, password generation/breach check, email validation, favicon fetch, CSV/JSON conversion, security headers, plus 5 chained endpoints (combined email/password/phone verification, PDF merge+compress, image EXIF clean).",
   "main": "index.js",
   "module": "index.mjs",
