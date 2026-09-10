@@ -153,6 +153,13 @@ async function findSubdomains(domain) {
   return request('/subdomains?domain=' + encodeURIComponent(domain));
 }
 
+// type optionnel : si omis, renvoie les 6 types (A, AAAA, CNAME, MX, TXT, NS) en un appel
+async function dnsLookup(domain, type) {
+  let path = '/dns-lookup?domain=' + encodeURIComponent(domain);
+  if (type) path += '&type=' + encodeURIComponent(type);
+  return request(path);
+}
+
 // --- Added for the 5 new chained endpoints ---
 
 // files: array of Buffer, or array of { name, buffer }. Returns { buffer, headers }
@@ -310,6 +317,7 @@ module.exports = {
   securityHeaders,
   urlReputation,
   findSubdomains,
+  dnsLookup,
   mergeAndCompressPdf,
   cleanImage,
   emailVerify,

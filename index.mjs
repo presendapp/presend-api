@@ -23,6 +23,7 @@ export const {
   securityHeaders,
   urlReputation,
   findSubdomains,
+  dnsLookup,
   mergeAndCompressPdf,
   cleanImage,
   emailVerify,

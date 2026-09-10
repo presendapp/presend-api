@@ -198,6 +198,18 @@ async function main() {
       throw new Error('Got: ' + JSON.stringify(r).slice(0, 200));
     }
   });
+  await check('dnsLookup returns A records for a real domain', async () => {
+    const r = await presend.dnsLookup('example.com', 'A');
+    if (!Array.isArray(r.records.A) || r.records.A.length === 0) {
+      throw new Error('Got: ' + JSON.stringify(r));
+    }
+  });
+  await check('dnsLookup with no type returns all 6 record types', async () => {
+    const r = await presend.dnsLookup('google.com');
+    const types = ['A', 'AAAA', 'CNAME', 'MX', 'TXT', 'NS'];
+    const missing = types.filter(t => !(t in r.records));
+    if (missing.length > 0) throw new Error('Missing types: ' + missing.join(', '));
+  });
 
   console.log(`\n${passed} passed, ${failed} failed`);
   if (failed > 0) process.exit(1);

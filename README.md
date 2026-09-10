@@ -133,6 +133,7 @@ All methods return a Promise resolving to the parsed JSON response, and throw an
 | `malwareCheck(buffer)` | Hash a file (SHA-256) and check it against a known-malware database |
 | `textSimilarity(texts[])` | SimHash near-duplicate detection for 1-2 texts; unrelated texts score ~50% by chance, not 0% |
 | `aiCrawlerCheck(domain)` | Fetch robots.txt and report which known AI crawlers (GPTBot, ClaudeBot, etc.) are allowed/blocked |
+| `dnsLookup(domain, type?)` | A, AAAA, CNAME, MX, TXT and NS records for a domain in one call; pass a type to narrow to one |
 
 ## Rate limits
 
