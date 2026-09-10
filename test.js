@@ -15,6 +15,28 @@ async function main() {
     }
   }
 
+  // Pour les tests qui dépendent d'un service tiers avec des pannes
+  // documentées comme occasionnelles (ex: crt.sh) -- 3 tentatives
+  // avant d'échouer réellement, pour ne pas bloquer une publication
+  // pour une instabilité qui n'a rien à voir avec notre code.
+  async function checkWithRetry(name, fn, attempts = 3) {
+    for (let i = 1; i <= attempts; i++) {
+      try {
+        await fn();
+        console.log('✅ ' + name + (i > 1 ? ' (réussi à la tentative ' + i + ')' : ''));
+        passed++;
+        return;
+      } catch (e) {
+        if (i === attempts) {
+          console.log('❌ ' + name + ' — ' + e.message + ' (après ' + attempts + ' tentatives)');
+          failed++;
+        } else {
+          await new Promise((r) => setTimeout(r, 2000 * i));
+        }
+      }
+    }
+  }
+
   await check('generateUuid returns a valid UUID', async () => {
     const r = await presend.generateUuid(1);
     if (!/^[0-9a-f-]{36}$/.test(r.uuids[0])) throw new Error('Invalid UUID format');
@@ -106,7 +128,7 @@ async function main() {
     if (typeof r.malicious !== 'boolean') throw new Error('Got: ' + JSON.stringify(r));
   });
 
-  await check('findSubdomains returns a subdomains array', async () => {
+  await checkWithRetry('findSubdomains returns a subdomains array', async () => {
     const r = await presend.findSubdomains('presend.pages.dev');
     if (!Array.isArray(r.subdomains)) throw new Error('Got: ' + JSON.stringify(r));
   });
