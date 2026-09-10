@@ -24,6 +24,7 @@ export const {
   urlReputation,
   findSubdomains,
   dnsLookup,
+  whoisLookup,
   mergeAndCompressPdf,
   cleanImage,
   emailVerify,

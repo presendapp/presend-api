@@ -210,6 +210,16 @@ async function main() {
     const missing = types.filter(t => !(t in r.records));
     if (missing.length > 0) throw new Error('Missing types: ' + missing.join(', '));
   });
+  await check('whoisLookup returns registrar and age for a real domain', async () => {
+    const r = await presend.whoisLookup('github.com');
+    if (r.registered !== true || !r.registrar || typeof r.age_days !== 'number') {
+      throw new Error('Got: ' + JSON.stringify(r));
+    }
+  });
+  await check('whoisLookup reports registered:false for a fake domain', async () => {
+    const r = await presend.whoisLookup('this-does-not-exist-xyz789.com');
+    if (r.registered !== false) throw new Error('Got: ' + JSON.stringify(r));
+  });
 
   console.log(`\n${passed} passed, ${failed} failed`);
   if (failed > 0) process.exit(1);

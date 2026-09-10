@@ -160,6 +160,10 @@ async function dnsLookup(domain, type) {
   return request(path);
 }
 
+async function whoisLookup(domain) {
+  return request('/whois-lookup?domain=' + encodeURIComponent(domain));
+}
+
 // --- Added for the 5 new chained endpoints ---
 
 // files: array of Buffer, or array of { name, buffer }. Returns { buffer, headers }
@@ -318,6 +322,7 @@ module.exports = {
   urlReputation,
   findSubdomains,
   dnsLookup,
+  whoisLookup,
   mergeAndCompressPdf,
   cleanImage,
   emailVerify,
