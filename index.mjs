@@ -28,6 +28,8 @@ export const {
   vulnerabilityCheck,
   typosquatCheck,
   ipReputation,
+  redirectTrace,
+  repoHealthCheck,
   mergeAndCompressPdf,
   cleanImage,
   emailVerify,

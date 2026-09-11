@@ -179,6 +179,14 @@ async function ipReputation(ip) {
   return request('/ip-reputation?ip=' + encodeURIComponent(ip));
 }
 
+async function redirectTrace(url) {
+  return request('/redirect-trace?url=' + encodeURIComponent(url));
+}
+
+async function repoHealthCheck(repo) {
+  return request('/repo-health-check?repo=' + encodeURIComponent(repo));
+}
+
 // --- Added for the 5 new chained endpoints ---
 
 // files: array of Buffer, or array of { name, buffer }. Returns { buffer, headers }
@@ -341,6 +349,8 @@ module.exports = {
   vulnerabilityCheck,
   typosquatCheck,
   ipReputation,
+  redirectTrace,
+  repoHealthCheck,
   mergeAndCompressPdf,
   cleanImage,
   emailVerify,

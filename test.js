@@ -274,6 +274,14 @@ async function main() {
     const r = await presend.ipReputation('8.8.8.8');
     if (r.listed !== false) throw new Error('Got: ' + JSON.stringify(r));
   });
+  await check('redirectTrace follows a known 3-hop redirect chain', async () => {
+    const r = await presend.redirectTrace('https://httpbin.org/redirect/3');
+    if (r.final_status !== 200 || r.hop_count < 3) throw new Error('Got: ' + JSON.stringify(r));
+  });
+  await check('repoHealthCheck returns real stars for a known repo', async () => {
+    const r = await presend.repoHealthCheck('lodash/lodash');
+    if (r.found !== true || typeof r.stars !== 'number' || r.stars < 1000) throw new Error('Got: ' + JSON.stringify(r));
+  });
 
   console.log(`\n${passed} passed, ${failed} failed`);
   if (failed > 0) process.exit(1);
