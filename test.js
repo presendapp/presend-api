@@ -242,6 +242,14 @@ async function main() {
     const r = await presend.whoisLookup('this-does-not-exist-xyz789.com');
     if (r.registered !== false) throw new Error('Got: ' + JSON.stringify(r));
   });
+  await check('vulnerabilityCheck detects a known-vulnerable lodash version', async () => {
+    const r = await presend.vulnerabilityCheck('npm', 'lodash', '4.17.15');
+    if (r.vulnerable !== true || r.count === 0) throw new Error('Got: ' + JSON.stringify(r).slice(0, 200));
+  });
+  await check('vulnerabilityCheck reports vulnerable:false for a fake package', async () => {
+    const r = await presend.vulnerabilityCheck('npm', 'this-does-not-exist-xyz789', '1.0.0');
+    if (r.vulnerable !== false) throw new Error('Got: ' + JSON.stringify(r));
+  });
 
   console.log(`\n${passed} passed, ${failed} failed`);
   if (failed > 0) process.exit(1);

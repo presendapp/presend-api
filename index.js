@@ -164,6 +164,13 @@ async function whoisLookup(domain) {
   return request('/whois-lookup?domain=' + encodeURIComponent(domain));
 }
 
+// version optionnelle : si omise, vérifie TOUTES les versions du paquet
+async function vulnerabilityCheck(ecosystem, pkg, version) {
+  let path = '/vulnerability-check?ecosystem=' + encodeURIComponent(ecosystem) + '&package=' + encodeURIComponent(pkg);
+  if (version) path += '&version=' + encodeURIComponent(version);
+  return request(path);
+}
+
 // --- Added for the 5 new chained endpoints ---
 
 // files: array of Buffer, or array of { name, buffer }. Returns { buffer, headers }
@@ -323,6 +330,7 @@ module.exports = {
   findSubdomains,
   dnsLookup,
   whoisLookup,
+  vulnerabilityCheck,
   mergeAndCompressPdf,
   cleanImage,
   emailVerify,

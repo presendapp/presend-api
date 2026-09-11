@@ -135,6 +135,7 @@ All methods return a Promise resolving to the parsed JSON response, and throw an
 | `aiCrawlerCheck(domain)` | Fetch robots.txt and report which known AI crawlers (GPTBot, ClaudeBot, etc.) are allowed/blocked |
 | `dnsLookup(domain, type?)` | A, AAAA, CNAME, MX, TXT and NS records for a domain in one call; pass a type to narrow to one |
 | `whoisLookup(domain)` | Registrar, creation/expiration dates, computed domain age in days, nameservers via RDAP |
+| `vulnerabilityCheck(ecosystem, package, version?)` | Check a package against OSV.dev (npm, PyPI, Go, crates.io, Maven, RubyGems, Packagist, NuGet); omit version to check all |
 
 ## Rate limits
 

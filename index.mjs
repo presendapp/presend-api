@@ -25,6 +25,7 @@ export const {
   findSubdomains,
   dnsLookup,
   whoisLookup,
+  vulnerabilityCheck,
   mergeAndCompressPdf,
   cleanImage,
   emailVerify,
