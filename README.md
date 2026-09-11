@@ -1,5 +1,7 @@
 # presend-api
 
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://god.gw.postman.com/run-collection/57808683-783f3f64-0f9f-433e-95f6-518520d14ccf?action=collection%2Ffork&collection-url=entityId%3D57808683-783f3f64-0f9f-433e-95f6-518520d14ccf%26entityType%3Dcollection%26workspaceId%3D8ffb507b-4140-4e42-8a44-fd6926d0b25b)
+
 Zero-dependency JavaScript client for the free [Presend API](https://presend.pages.dev/api) — no signup, no API key.
 
 ```bash
