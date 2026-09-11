@@ -258,6 +258,14 @@ async function main() {
     const r = await presend.vulnerabilityCheck('npm', 'this-does-not-exist-xyz789', '1.0.0');
     if (r.vulnerable !== false) throw new Error('Got: ' + JSON.stringify(r));
   });
+  await check('typosquatCheck flags a known typo of a popular package', async () => {
+    const r = await presend.typosquatCheck('npm', 'lodas');
+    if (r.suspicious !== true || r.similar_to.length === 0) throw new Error('Got: ' + JSON.stringify(r));
+  });
+  await check('typosquatCheck recognizes an exact well-known package name', async () => {
+    const r = await presend.typosquatCheck('npm', 'express');
+    if (r.is_known_popular_package !== true) throw new Error('Got: ' + JSON.stringify(r));
+  });
 
   console.log(`\n${passed} passed, ${failed} failed`);
   if (failed > 0) process.exit(1);

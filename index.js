@@ -171,6 +171,10 @@ async function vulnerabilityCheck(ecosystem, pkg, version) {
   return request(path);
 }
 
+async function typosquatCheck(ecosystem, pkg) {
+  return request('/typosquat-check?ecosystem=' + encodeURIComponent(ecosystem) + '&package=' + encodeURIComponent(pkg));
+}
+
 // --- Added for the 5 new chained endpoints ---
 
 // files: array of Buffer, or array of { name, buffer }. Returns { buffer, headers }
@@ -331,6 +335,7 @@ module.exports = {
   dnsLookup,
   whoisLookup,
   vulnerabilityCheck,
+  typosquatCheck,
   mergeAndCompressPdf,
   cleanImage,
   emailVerify,

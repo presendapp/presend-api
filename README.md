@@ -136,6 +136,7 @@ All methods return a Promise resolving to the parsed JSON response, and throw an
 | `dnsLookup(domain, type?)` | A, AAAA, CNAME, MX, TXT and NS records for a domain in one call; pass a type to narrow to one |
 | `whoisLookup(domain)` | Registrar, creation/expiration dates, computed domain age in days, nameservers via RDAP |
 | `vulnerabilityCheck(ecosystem, package, version?)` | Check a package against OSV.dev (npm, PyPI, Go, crates.io, Maven, RubyGems, Packagist, NuGet); omit version to check all |
+| `typosquatCheck(ecosystem, package)` | Flags a package name within edit-distance 2 of a well-known npm/PyPI package (typosquatting pattern) |
 
 ## Rate limits
 

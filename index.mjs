@@ -26,6 +26,7 @@ export const {
   dnsLookup,
   whoisLookup,
   vulnerabilityCheck,
+  typosquatCheck,
   mergeAndCompressPdf,
   cleanImage,
   emailVerify,
