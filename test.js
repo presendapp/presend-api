@@ -266,6 +266,14 @@ async function main() {
     const r = await presend.typosquatCheck('npm', 'express');
     if (r.is_known_popular_package !== true) throw new Error('Got: ' + JSON.stringify(r));
   });
+  await check('ipReputation reports listed:true for a known DROP-listed IP', async () => {
+    const r = await presend.ipReputation('1.19.100.100');
+    if (r.listed !== true) throw new Error('Got: ' + JSON.stringify(r));
+  });
+  await check('ipReputation reports listed:false for a clean IP', async () => {
+    const r = await presend.ipReputation('8.8.8.8');
+    if (r.listed !== false) throw new Error('Got: ' + JSON.stringify(r));
+  });
 
   console.log(`\n${passed} passed, ${failed} failed`);
   if (failed > 0) process.exit(1);

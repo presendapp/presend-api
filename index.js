@@ -175,6 +175,10 @@ async function typosquatCheck(ecosystem, pkg) {
   return request('/typosquat-check?ecosystem=' + encodeURIComponent(ecosystem) + '&package=' + encodeURIComponent(pkg));
 }
 
+async function ipReputation(ip) {
+  return request('/ip-reputation?ip=' + encodeURIComponent(ip));
+}
+
 // --- Added for the 5 new chained endpoints ---
 
 // files: array of Buffer, or array of { name, buffer }. Returns { buffer, headers }
@@ -336,6 +340,7 @@ module.exports = {
   whoisLookup,
   vulnerabilityCheck,
   typosquatCheck,
+  ipReputation,
   mergeAndCompressPdf,
   cleanImage,
   emailVerify,

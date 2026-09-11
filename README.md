@@ -137,6 +137,7 @@ All methods return a Promise resolving to the parsed JSON response, and throw an
 | `whoisLookup(domain)` | Registrar, creation/expiration dates, computed domain age in days, nameservers via RDAP |
 | `vulnerabilityCheck(ecosystem, package, version?)` | Check a package against OSV.dev (npm, PyPI, Go, crates.io, Maven, RubyGems, Packagist, NuGet); omit version to check all |
 | `typosquatCheck(ecosystem, package)` | Flags a package name within edit-distance 2 of a well-known npm/PyPI package (typosquatting pattern) |
+| `ipReputation(ip)` | Checks an IPv4 against Spamhaus DROP -- known spam/hijacker-controlled netblocks |
 
 ## Rate limits
 
