@@ -1,7 +1,7 @@
 {
   "name": "presend-api",
-  "version": "1.10.0",
-  "description": "Zero-dependency JS client for the free Presend API — hashing, UUID, Base64, JWT decode, URL cleaning, IP geo, timestamps, colors, user-agent parsing, password generation/breach check, email validation, favicon fetch, CSV/JSON conversion, security headers, plus 5 chained endpoints (combined email/password/phone verification, PDF merge+compress, image EXIF clean).",
+  "version": "1.10.1",
+  "description": "Zero-dependency JS client for the free Presend API -- supply-chain security checks (typosquat detection, OSV.dev vulnerability lookup, npm maintainer-change detection), WHOIS/DNS lookup, GitHub repo health, hashing, UUID, Base64, JWT decode/verify, URL cleaning, IP geo, timestamps, password generation/breach check, email/phone validation, and more.",
   "main": "index.js",
   "module": "index.mjs",
   "type": "commonjs",
@@ -15,7 +15,8 @@
     "README.md"
   ],
   "scripts": {
-    "test": "node test.js"
+    "test": "node test.js",
+    "pretest": "python3 generate-fixtures.py"
   },
   "keywords": [
     "api",
@@ -49,7 +50,22 @@
     "libphonenumber",
     "pdf-merge",
     "exif-remover",
-    "chained-api"
+    "chained-api",
+    "typosquatting",
+    "typosquat-detection",
+    "supply-chain-security",
+    "vulnerability-check",
+    "osv",
+    "cve",
+    "npm-security",
+    "pypi-security",
+    "whois",
+    "dns-lookup",
+    "domain-lookup",
+    "github-api",
+    "repo-health",
+    "maintainer-change",
+    "malware-check"
   ],
   "author": "Presend",
   "license": "MIT",
