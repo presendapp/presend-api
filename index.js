@@ -322,6 +322,77 @@ async function aiCrawlerCheck(domain) {
   return request('/ai-crawler-check?domain=' + encodeURIComponent(domain));
 }
 
+async function maintainerChangeCheck(ecosystem, pkg) {
+  return request('/maintainer-change-check?ecosystem=' + encodeURIComponent(ecosystem) + '&package=' + encodeURIComponent(pkg));
+}
+
+async function supplyChainCheck(ecosystem, pkg) {
+  return request('/supply-chain-check?ecosystem=' + encodeURIComponent(ecosystem) + '&package=' + encodeURIComponent(pkg));
+}
+
+async function addressRisk(address) {
+  return request('/address-risk?address=' + encodeURIComponent(address));
+}
+
+async function txDecode(tx) {
+  return request('/tx-decode?tx=' + encodeURIComponent(tx));
+}
+
+async function rpcCheck(url) {
+  return request('/rpc-check?url=' + encodeURIComponent(url));
+}
+
+async function cveLookup(id) {
+  return request('/cve-lookup?id=' + encodeURIComponent(id));
+}
+
+async function ibanValidate(iban) {
+  return request('/iban-validate?iban=' + encodeURIComponent(iban));
+}
+
+async function vatValidate(vat, country) {
+  let path = '/vat-validate?vat=' + encodeURIComponent(vat);
+  if (country) path += '&country=' + encodeURIComponent(country);
+  return request(path);
+}
+
+async function linkMetadata(url) {
+  return request('/link-metadata?url=' + encodeURIComponent(url));
+}
+
+// Lots POST, découpés automatiquement selon le plafond de l'API. Chaque
+// morceau compte pour une requête du rate limit (10/min par endpoint).
+async function batchPost(path, ecosystem, packages, maxPerRequest) {
+  if (!Array.isArray(packages) || packages.length === 0) {
+    throw new Error('packages must be a non-empty array');
+  }
+  const merged = { ecosystem: null, count: 0, suspicious_count: 0, error_count: 0, results: [] };
+  for (let i = 0; i < packages.length; i += maxPerRequest) {
+    const data = await request(path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ecosystem, packages: packages.slice(i, i + maxPerRequest) }),
+    });
+    merged.ecosystem = data.ecosystem;
+    merged.count += data.count || 0;
+    merged.suspicious_count += data.suspicious_count || 0;
+    merged.error_count += data.error_count || 0;
+    merged.results.push(...(data.results || []));
+    for (const k of Object.keys(data)) {
+      if (!(k in merged)) merged[k] = data[k];
+    }
+  }
+  return merged;
+}
+
+async function typosquatCheckBatch(ecosystem, packages) {
+  return batchPost('/typosquat-check', ecosystem, packages, 100);
+}
+
+async function maintainerChangeCheckBatch(packages) {
+  return batchPost('/maintainer-change-check', 'npm', packages, 20);
+}
+
 module.exports = {
   hashFile,
   cleanUrl,
@@ -365,4 +436,15 @@ module.exports = {
   malwareCheck,
   textSimilarity,
   aiCrawlerCheck,
+  maintainerChangeCheck,
+  maintainerChangeCheckBatch,
+  typosquatCheckBatch,
+  supplyChainCheck,
+  addressRisk,
+  txDecode,
+  rpcCheck,
+  cveLookup,
+  ibanValidate,
+  vatValidate,
+  linkMetadata,
 };

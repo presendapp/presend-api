@@ -138,14 +138,25 @@ All methods return a Promise resolving to the parsed JSON response, and throw an
 | `dnsLookup(domain, type?)` | A, AAAA, CNAME, MX, TXT and NS records for a domain in one call; pass a type to narrow to one |
 | `whoisLookup(domain)` | Registrar, creation/expiration dates, computed domain age in days, nameservers via RDAP |
 | `vulnerabilityCheck(ecosystem, package, version?)` | Check a package against OSV.dev (npm, PyPI, Go, crates.io, Maven, RubyGems, Packagist, NuGet); omit version to check all |
-| `typosquatCheck(ecosystem, package)` | Flags a package name within edit-distance 2 of a well-known npm/PyPI package (typosquatting pattern) |
-| `ipReputation(ip)` | Checks an IPv4 against Spamhaus DROP -- known spam/hijacker-controlled netblocks |
+| `typosquatCheck(ecosystem, package)` | Flags a package name that is a near-miss of a well-known npm/PyPI package (1 edit for 4-7 character names, 2 for 8+; names of 3 characters or fewer are not fuzzy-matched) |
+| `typosquatCheckBatch(ecosystem, packages[])` | Same check for many names at once; split automatically into requests of 100 (each counts once toward the rate limit) |
+| `ipReputation(ip)` | Checks an IPv4 or IPv6 address against a curated netblock reputation list (hijacked or cyber-crime-controlled ranges); the response includes the list date and source attribution |
 | `redirectTrace(url)` | Follows a URL's full redirect chain (up to 15 hops), flagging cross-domain jumps |
 | `repoHealthCheck(repo)` | Stars, forks, open issues, license, archived status and days since last push for a GitHub repo (owner/name) |
+| `maintainerChangeCheck(ecosystem, package)` | npm only: flags a previously unseen human publisher taking over a package after 180+ days of inactivity, within the last 365 days (the event-stream pattern). Does not detect a hijacked existing account |
+| `maintainerChangeCheckBatch(packages[])` | Same check for many npm packages; split automatically into requests of 20 (each counts once toward the rate limit) |
+| `supplyChainCheck(ecosystem, package)` | Combined: maintainer change (npm), OSV.dev vulnerabilities, typosquatting and repo health, with one overall verdict |
+| `addressRisk(address)` | Screens an EVM address (0x...) against the OFAC sanctions list. EVM only |
+| `txDecode(tx)` | Decodes a Cosmos SDK transaction (base64) into readable messages, no external dependency |
+| `rpcCheck(url)` | Audits a CometBFT/Cosmos RPC endpoint (exposed sensitive routes, node info) |
+| `cveLookup(id)` | Looks up a CVE or GHSA identifier on OSV.dev: affected packages, versions, severity |
+| `ibanValidate(iban)` | Validates an IBAN (ISO 7064 mod-97 checksum and country length), no external call |
+| `vatValidate(vat, country?)` | Checks an EU VAT number against the official VIES service |
+| `linkMetadata(url)` | Fetches a page's title, description, Open Graph and Twitter Card metadata |
 
 ## Rate limits
 
-Endpoints are fair-use rate-limited (typically 20-60 requests/minute per IP). No SLA — this is a free community API.
+Endpoints are fair-use rate-limited (10-60 requests/minute per IP depending on the endpoint; supply-chain and IP checks are 10/minute, so prefer the batch methods for many packages). No SLA — this is a free community API.
 
 ## License
 

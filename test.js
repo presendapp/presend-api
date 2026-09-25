@@ -283,6 +283,20 @@ async function main() {
     if (r.found !== true || typeof r.stars !== 'number' || r.stars < 1000) throw new Error('Got: ' + JSON.stringify(r));
   });
 
+  // --- Endpoints ajoutés au client le 25 sept. 2026 (exemples repris d'openapi.json) ---
+  await check('maintainerChangeCheck', async () => { const r = await presend.maintainerChangeCheck('npm', 'lodash'); if (r.found !== true || typeof r.suspicious !== 'boolean' || !Array.isArray(r.ci_publisher_events)) throw new Error(JSON.stringify(r).slice(0, 200)); });
+  await check('maintainerChangeCheckBatch', async () => { const r = await presend.maintainerChangeCheckBatch(['lodash', 'express', 'presend-nonexistent-pkg-zz9']); if (r.count !== 3 || r.results[2].found !== false) throw new Error(JSON.stringify(r).slice(0, 200)); });
+  await check('typosquatCheckBatch', async () => { const r = await presend.typosquatCheckBatch('npm', ['lodas', 'ms', 'react']); if (r.count !== 3 || !r.results[0].suspicious || r.results[1].suspicious) throw new Error(JSON.stringify(r).slice(0, 200)); });
+  await check('typosquatCheckBatch (découpage 150 -> 2 appels)', async () => { const names = Array.from({ length: 150 }, (_, i) => 'pkg-' + i); const r = await presend.typosquatCheckBatch('npm', names); if (r.count !== 150 || r.results.length !== 150) throw new Error('count=' + r.count); });
+  await check('supplyChainCheck', async () => { const r = await presend.supplyChainCheck('npm', 'lodash'); if (!r || r.error) throw new Error(JSON.stringify(r).slice(0, 200)); });
+  await check('cveLookup', async () => { const r = await presend.cveLookup("CVE-2021-44228"); if (!r || r.error) throw new Error(JSON.stringify(r).slice(0, 200)); });
+  await check('ibanValidate', async () => { const r = await presend.ibanValidate("DE89370400440532013000"); if (r.valid !== true) throw new Error(JSON.stringify(r).slice(0, 200)); });
+  await checkWithRetry('vatValidate (VIES, non bloquant)', async () => { const r = await presend.vatValidate("6388047V", "IE"); if (!r || r.error) throw new Error(JSON.stringify(r).slice(0, 200)); }, 3, true);
+  await check('linkMetadata', async () => { const r = await presend.linkMetadata('https://example.com'); if (!r || r.error) throw new Error(JSON.stringify(r).slice(0, 200)); });
+  await check('addressRisk', async () => { const r = await presend.addressRisk("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"); if (!r || r.error) throw new Error(JSON.stringify(r).slice(0, 200)); });
+  // txDecode : pas d'exemple dans openapi.json, test à écrire
+  await check('rpcCheck', async () => { const r = await presend.rpcCheck("https://cosmos-rpc.publicnode.com"); if (!r || r.error) throw new Error(JSON.stringify(r).slice(0, 200)); });
+
   console.log(`\n${passed} passed, ${failed} failed`);
   if (failed > 0) process.exit(1);
 }

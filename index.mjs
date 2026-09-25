@@ -44,6 +44,17 @@ export const {
   malwareCheck,
   textSimilarity,
   aiCrawlerCheck,
+  maintainerChangeCheck,
+  maintainerChangeCheckBatch,
+  typosquatCheckBatch,
+  supplyChainCheck,
+  addressRisk,
+  txDecode,
+  rpcCheck,
+  cveLookup,
+  ibanValidate,
+  vatValidate,
+  linkMetadata,
 } = cjs;
 
 export default cjs;
