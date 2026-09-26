@@ -48,7 +48,8 @@ const { parsed } = await presend.parseUserAgent(request.headers['user-agent']);
 // Generate a secure password with entropy estimate
 const { password, entropy_bits } = await presend.generatePassword({ length: 20, symbols: true });
 
-// Check if a password has been breached (HIBP k-anonymity, never sent in full)
+// Check if a password has been breached (HIBP k-anonymity: only a hash prefix reaches HIBP, but the
+// password is sent to Presend in the URL of a GET request; for real passwords prefer passwordCheck, POST)
 const { breached, breach_count } = await presend.checkPasswordBreach('some-password');
 
 // Validate an email (syntax + real MX record check)
