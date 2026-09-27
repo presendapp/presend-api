@@ -114,7 +114,7 @@ All methods return a Promise resolving to the parsed JSON response, and throw an
 | `convertColor({ hex?, rgb?, hsl? })` | Convert between color formats |
 | `parseUserAgent(ua?)` | Parse a User-Agent string |
 | `generatePassword({ length?, symbols?, uppercase?, numbers?, excludeAmbiguous? })` | Generate a secure password |
-| `checkPasswordBreach(password)` | Check against Have I Been Pwned (k-anonymity) |
+| `checkPasswordBreach(password)` | Check against Have I Been Pwned. Only a SHA-1 prefix reaches HIBP, but the password travels to Presend in a GET URL: for real passwords use `passwordCheck` (POST) |
 | `validateEmail(email)` | Syntax + MX record validation |
 | `isDisposableEmail(email)` | Detect throwaway email domains |
 | `getFavicon(domain)` | Fetch a domain's favicon URL |
