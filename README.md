@@ -144,9 +144,9 @@ All methods return a Promise resolving to the parsed JSON response, and throw an
 | `ipReputation(ip)` | Checks an IPv4 or IPv6 address against a curated netblock reputation list (hijacked or cyber-crime-controlled ranges); the response includes the list date and source attribution |
 | `redirectTrace(url)` | Follows a URL's full redirect chain (up to 15 hops), flagging cross-domain jumps |
 | `repoHealthCheck(repo)` | Stars, forks, open issues, license, archived status and days since last push for a GitHub repo (owner/name) |
-| `maintainerChangeCheck(ecosystem, package)` | npm only: flags a previously unseen human publisher taking over a package after 180+ days of inactivity, within the last 365 days (the event-stream pattern). Does not detect a hijacked existing account |
-| `maintainerChangeCheckBatch(packages[])` | Same check for many npm packages; split automatically into requests of 20 (each counts once toward the rate limit) |
-| `supplyChainCheck(ecosystem, package)` | Combined: maintainer change (npm), OSV.dev vulnerabilities, typosquatting and repo health, with one overall verdict |
+| `maintainerChangeCheck(ecosystem, package)` | npm: flags a previously unseen human publisher taking over a package after 180+ days of inactivity, within the last 365 days (the event-stream pattern); does not detect a hijacked existing account. PyPI: existence and age only (PyPI does not expose who published each release). Both: package age and `new_package` (first published less than 30 days ago) |
+| `maintainerChangeCheckBatch(packages[], ecosystem = 'npm')` | Same check for many packages from one registry (npm or PyPI); split automatically into requests of 20 (each counts once toward the rate limit) |
+| `supplyChainCheck(ecosystem, package, version?)` | Combined: maintainer change (npm), OSV.dev vulnerabilities for the given version (latest published by default), typosquatting, repo health and new-package age, with one overall verdict |
 | `addressRisk(address)` | Screens an EVM address (0x...) against the OFAC sanctions list. EVM only |
 | `txDecode(tx)` | Decodes a Cosmos SDK transaction (base64) into readable messages, no external dependency |
 | `rpcCheck(url)` | Audits a CometBFT/Cosmos RPC endpoint (exposed sensitive routes, node info) |

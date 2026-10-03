@@ -326,8 +326,8 @@ async function maintainerChangeCheck(ecosystem, pkg) {
   return request('/maintainer-change-check?ecosystem=' + encodeURIComponent(ecosystem) + '&package=' + encodeURIComponent(pkg));
 }
 
-async function supplyChainCheck(ecosystem, pkg) {
-  return request('/supply-chain-check?ecosystem=' + encodeURIComponent(ecosystem) + '&package=' + encodeURIComponent(pkg));
+async function supplyChainCheck(ecosystem, pkg, version) {
+  return request('/supply-chain-check?ecosystem=' + encodeURIComponent(ecosystem) + '&package=' + encodeURIComponent(pkg) + (version ? '&version=' + encodeURIComponent(version) : ''));
 }
 
 async function addressRisk(address) {
@@ -389,8 +389,8 @@ async function typosquatCheckBatch(ecosystem, packages) {
   return batchPost('/typosquat-check', ecosystem, packages, 100);
 }
 
-async function maintainerChangeCheckBatch(packages) {
-  return batchPost('/maintainer-change-check', 'npm', packages, 20);
+async function maintainerChangeCheckBatch(packages, ecosystem = 'npm') {
+  return batchPost('/maintainer-change-check', ecosystem, packages, 20);
 }
 
 module.exports = {

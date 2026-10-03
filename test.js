@@ -148,7 +148,7 @@ async function main() {
   });
   await check('passwordCheck flags a known-breached weak password', async () => {
     const r = await presend.passwordCheck('password123', true);
-    if (r.strength !== 'fair' || !r.breach || r.breach.breached !== true) {
+    if (r.strength !== 'very_weak' || r.strength_reason !== 'found_in_breaches' || !r.breach || r.breach.breached !== true) {
       throw new Error('Got: ' + JSON.stringify(r));
     }
   });
@@ -289,6 +289,9 @@ async function main() {
   await check('typosquatCheckBatch', async () => { const r = await presend.typosquatCheckBatch('npm', ['lodas', 'ms', 'react']); if (r.count !== 3 || !r.results[0].suspicious || r.results[1].suspicious) throw new Error(JSON.stringify(r).slice(0, 200)); });
   await check('typosquatCheckBatch (découpage 150 -> 2 appels)', async () => { const names = Array.from({ length: 150 }, (_, i) => 'pkg-' + i); const r = await presend.typosquatCheckBatch('npm', names); if (r.count !== 150 || r.results.length !== 150) throw new Error('count=' + r.count); });
   await check('supplyChainCheck', async () => { const r = await presend.supplyChainCheck('npm', 'lodash'); if (!r || r.error) throw new Error(JSON.stringify(r).slice(0, 200)); });
+  await check('maintainerChangeCheck pypi', async () => { const r = await presend.maintainerChangeCheck('pypi', 'requests'); if (r.found !== true || r.maintainer_analysis !== 'npm_only' || typeof r.package_age_days !== 'number' || r.new_package !== false) throw new Error(JSON.stringify(r).slice(0, 200)); });
+  await check('maintainerChangeCheckBatch pypi', async () => { const r = await presend.maintainerChangeCheckBatch(['requests', 'presend-nonexistent-pkg-zz9'], 'pypi'); if (r.ecosystem !== 'pypi' || r.count !== 2 || r.results[0].found !== true || r.results[1].found !== false) throw new Error(JSON.stringify(r).slice(0, 200)); });
+  await check('supplyChainCheck version', async () => { const r = await presend.supplyChainCheck('npm', 'lodash', '4.17.15'); if (r.version_checked !== '4.17.15' || r.version_source !== 'requested') throw new Error(JSON.stringify(r).slice(0, 200)); });
   await check('cveLookup', async () => { const r = await presend.cveLookup("CVE-2021-44228"); if (!r || r.error) throw new Error(JSON.stringify(r).slice(0, 200)); });
   await check('ibanValidate', async () => { const r = await presend.ibanValidate("DE89370400440532013000"); if (r.valid !== true) throw new Error(JSON.stringify(r).slice(0, 200)); });
   await checkWithRetry('vatValidate (VIES, non bloquant)', async () => { const r = await presend.vatValidate("6388047V", "IE"); if (!r || r.error) throw new Error(JSON.stringify(r).slice(0, 200)); }, 3, true);
