@@ -138,7 +138,7 @@ All methods return a Promise resolving to the parsed JSON response, and throw an
 | `aiCrawlerCheck(domain)` | Fetch robots.txt and report which known AI crawlers (GPTBot, ClaudeBot, etc.) are allowed/blocked |
 | `dnsLookup(domain, type?)` | A, AAAA, CNAME, MX, TXT and NS records for a domain in one call; pass a type to narrow to one |
 | `whoisLookup(domain)` | Registrar, creation/expiration dates, computed domain age in days, nameservers via RDAP |
-| `vulnerabilityCheck(ecosystem, package, version?)` | Check a package against OSV.dev (npm, PyPI, Go, crates.io, Maven, RubyGems, Packagist, NuGet); omit version to check all |
+| `vulnerabilityCheck(ecosystem, package, version?)` | Check a package against OSV.dev (npm, PyPI, Go, crates.io, Maven, RubyGems, Packagist, NuGet); omit version to check all versions. For npm and PyPI, a name that does not exist returns `found: false` and `vulnerable: null`, never a clean result |
 | `typosquatCheck(ecosystem, package)` | Flags a package name that is a near-miss of a well-known npm/PyPI package (1 edit for 4-7 character names, 2 for 8+; names of 3 characters or fewer are not fuzzy-matched) |
 | `typosquatCheckBatch(ecosystem, packages[])` | Same check for many names at once; split automatically into requests of 100 (each counts once toward the rate limit) |
 | `ipReputation(ip)` | Checks an IPv4 or IPv6 address against a curated netblock reputation list (hijacked or cyber-crime-controlled ranges); the response includes the list date and source attribution |

@@ -254,9 +254,9 @@ async function main() {
     const r = await presend.vulnerabilityCheck('npm', 'lodash', '4.17.15');
     if (r.vulnerable !== true || r.count === 0) throw new Error('Got: ' + JSON.stringify(r).slice(0, 200));
   });
-  await check('vulnerabilityCheck reports vulnerable:false for a fake package', async () => {
+  await check('vulnerabilityCheck reports a fake package as not found, never as clean', async () => {
     const r = await presend.vulnerabilityCheck('npm', 'this-does-not-exist-xyz789', '1.0.0');
-    if (r.vulnerable !== false) throw new Error('Got: ' + JSON.stringify(r));
+    if (r.found !== false || r.vulnerable !== null) throw new Error('Got: ' + JSON.stringify(r));
   });
   await check('typosquatCheck flags a known typo of a popular package', async () => {
     const r = await presend.typosquatCheck('npm', 'lodas');
